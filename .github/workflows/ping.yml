@@ -1,0 +1,28 @@
+name: Keep Render Warm
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'  # Every 10 minutes
+
+jobs:
+  ping-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install axios dotenv
+
+      - name: Run ping script
+        run: node cron-ping.js
+        env:
+          BACKEND_URL: ${{ secrets.BACKEND_URL }}
+          TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+          TEST_JWT: ${{ secrets.TEST_JWT }}
