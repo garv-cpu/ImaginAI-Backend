@@ -10,6 +10,7 @@ Cashfree.XClientId = process.env.CASHFREE_CLIENT_ID;
 Cashfree.XClientSecret = process.env.CASHFREE_CLIENT_SECRET;
 Cashfree.XEnvironment = "SANDBOX"; // change to "PRODUCTION" when live
 
+const PGInstance = Cashfree.PG;
 // Register a new user
 export const registerUser = async (req, res) => {
   try {
@@ -147,7 +148,7 @@ export const initiateCashfreePayment = async (req, res) => {
       },
     };
 
-    const response = await Cashfree.PGCreateOrder(orderPayload);
+    const response = await PGInstance.orders.create(orderPayload);
 
     res.json({
       success: true,
