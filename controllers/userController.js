@@ -3,14 +3,16 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import transactionModel from "../models/transactionModel.js";
-import { Cashfree } from "cashfree-pg";
+import Cashfree from "cashfree-pg";
 
 
-Cashfree.XClientId = process.env.CASHFREE_CLIENT_ID;
-Cashfree.XClientSecret = process.env.CASHFREE_CLIENT_SECRET;
-Cashfree.XEnvironment = "SANDBOX"; // change to "PRODUCTION" when live
+// Initialize PGInstance properly
+const PGInstance = Cashfree.Cashfree({
+  environment: "SANDBOX", // or "PRODUCTION"
+  clientId: process.env.CASHFREE_CLIENT_ID,
+  clientSecret: process.env.CASHFREE_CLIENT_SECRET,
+});
 
-const PGInstance = Cashfree.PG;
 // Register a new user
 export const registerUser = async (req, res) => {
   try {
