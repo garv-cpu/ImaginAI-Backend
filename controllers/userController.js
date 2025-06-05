@@ -7,11 +7,11 @@ import { Cashfree } from "cashfree-pg";
 
 
 // Initialize PGInstance properly
-const PGInstance = new Cashfree({
-  environment: "SANDBOX", // or "PRODUCTION"
-  clientId: process.env.CASHFREE_CLIENT_ID,
-  clientSecret: process.env.CASHFREE_CLIENT_SECRET,
-});
+const PGInstance = new Cashfree(
+  CFEnvironment.SANDBOX,
+  process.env.CASHFREE_CLIENT_ID,
+  process.env.CASHFREE_CLIENT_SECRET
+);
 // Register a new user
 export const registerUser = async (req, res) => {
   try {
@@ -149,7 +149,7 @@ export const initiateCashfreePayment = async (req, res) => {
       },
     };
 
-    const response = await PGInstance.orders.create(orderPayload);
+    const response = await PGInstance.PGCreateOrder(orderPayload);
 
     res.json({
       success: true,
@@ -167,7 +167,7 @@ export const verifyCashfreePayment = async (req, res) => {
   try {
     const { order_id } = req.body;
 
-    const response = await PGInstance.orders.get({ order_id });
+    const response = await PGInstance.PGGetOrderDetails({ order_id });
 
     if (response.data.order_status === "PAID") {
       const transaction = await transactionModel.findById(order_id);
