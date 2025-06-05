@@ -3,12 +3,12 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import transactionModel from "../models/transactionModel.js";
-import { Cashfree } from "cashfree-pg";
+import { Cashfree, CFEnvironment } from "cashfree-pg";
 
 
 // Initialize PGInstance properly
 const PGInstance = new Cashfree(
-  CFEnvironment.SANDBOX,
+  CFEnvironment.SANDBOX, // Use CFEnvironment.PRODUCTION for production
   process.env.CASHFREE_CLIENT_ID,
   process.env.CASHFREE_CLIENT_SECRET
 );
