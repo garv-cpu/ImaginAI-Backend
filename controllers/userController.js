@@ -166,7 +166,7 @@ export const verifyCashfreePayment = async (req, res) => {
   try {
     const { order_id } = req.body;
 
-    const response = await Cashfree.PGOrderFetch({ order_id });
+    const response = await PGInstance.orders.get({ order_id });
 
     if (response.data.order_status === "PAID") {
       const transaction = await transactionModel.findById(order_id);
