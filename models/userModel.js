@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    phone: {
+      type: String,
+      required: true,
+    },
     creditBalance: {
       type: Number,
       default: 2,

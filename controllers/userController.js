@@ -107,6 +107,12 @@ export const initiateCashfreePayment = async (req, res) => {
       return res.json({ success: false, message: "Missing Details" });
     }
 
+    // Fetch user from DB to get phone number
+    const user = await userModel.findById(userId);
+    if (!user || !user.phone) {
+      return res.status(400).json({ success: false, message: "User phone number not found" });
+    }
+
     let credits, plan, amount;
     switch (planId) {
       case "Starter":
@@ -142,6 +148,7 @@ export const initiateCashfreePayment = async (req, res) => {
       order_currency: "INR",
       customer_details: {
         customer_id: userId,
+        customer_phone: user.phone,
       },
       order_meta: {
         return_url: `${process.env.FRONTEND_URL}/payment-success?order_id={order_id}`,
@@ -155,12 +162,12 @@ export const initiateCashfreePayment = async (req, res) => {
       success: true,
       order: response.data,
     });
-
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 
 export const verifyCashfreePayment = async (req, res) => {
