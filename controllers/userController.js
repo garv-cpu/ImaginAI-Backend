@@ -8,7 +8,7 @@ import { Cashfree, CFEnvironment } from "cashfree-pg";
 
 // Initialize PGInstance properly
 const PGInstance = new Cashfree(
-  CFEnvironment.SANDBOX, // Use CFEnvironment.PRODUCTION for production
+  CFEnvironment.PRODUCTION, // Use CFEnvironment.PRODUCTION for production
   process.env.CASHFREE_CLIENT_ID,
   process.env.CASHFREE_CLIENT_SECRET
 );
