@@ -15,19 +15,21 @@ const PGInstance = new Cashfree(
 // Register a new user
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, phone } = req.body;  // include phone here
 
-    // Check if all fields are provided
-    if (!name || !email || !password) {
+    // Check if all required fields are provided
+    if (!name || !email || !password || !phone) {
       return res
         .status(400)
-        .json({ success: false, message: "Mising Details" });
+        .json({ success: false, message: "Missing Details" });
     }
+
+    // Optional: Validate phone format here if you want (e.g. regex)
 
     // Check if user already exists
     const existingUser = await userModel.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ success: false, message: "User already exists" });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -37,6 +39,7 @@ export const registerUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      phone,   // Save phone number in DB
     };
 
     const newUser = new userModel(userData);
@@ -45,12 +48,18 @@ export const registerUser = async (req, res) => {
     // Generate JWT token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
-    res.json({ success: true, token, user: { name: user.name } });
+    // Include phone if you want it in user response object
+    res.json({
+      success: true,
+      token,
+      user: { name: user.name, phone: user.phone, email: user.email },
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 export const loginUser = async (req, res) => {
   try {
