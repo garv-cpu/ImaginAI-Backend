@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
     },
     creditBalance: {
       type: Number,
-      default: 2,
+      default: 1,
     },
   },
   { timestamps: true }
